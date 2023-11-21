@@ -1,0 +1,106 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+
+        <h2 style="text-align: center; margin-bottom: 60px;">listing page</h2>
+        
+        {% if message %}
+            {% if update %}
+                <div class="alert alert-success" role="alert">
+                    {{message}}
+                </div>
+            {% else %}
+                <div class="alert alert-danger" role="alert">
+                    {{message}}
+                </div>
+            {% endif %}
+        {% endif %}
+
+        {% if not list_data.is_active and user == list_data.price.user %}
+            <div class="alert alert-success" role="alert">
+                <P>Congratulations you won</P>
+            </div>
+        {% endif %}
+
+        <div class="outer-div" style=" display: flex; justify-content: center; align-items: center; width: 70%; box-shadow: 0 6px 6px rgba(0, 0, 0, 0.5); ">
+            <h2>{{ Listing.title }}</h2>
+            <img src="{{ list_data.imageurl }}" style="max-width: 30%; max-height: 40%; object-fit: contain;" alt="...">
+            <div style="margin-left: 150px;">
+            <h5>{{ list_data.description }}</h5>
+            <h4>owner: {{ list_data.user }}</h4>
+            <h2 style="margin-top: 50px;">price : ${{ list_data.price }}</h2>
+            </div>
+        </div>
+        {% if user.is_authenticated and list_data.is_active %}
+                <p style='margin-top:20px;'>intial price: ${{list_data.price}}</p>
+                <form style="margin-top: 30px;" action="{% url 'addbid' id=list_data.id %}">
+                <input type="number" min="0" name="price" id="">
+                <button type="submit" class="btn btn-primary">Add Bid</button>
+                </form>
+              
+        {% endif %}
+        {% if user.is_authenticated %}
+            {% if isowner %}
+                <form style="margin-top: 30px;" action="{% url 'closebid' id=list_data.id %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-primary">Close Bid</button>
+                </form>
+            {% endif %}
+
+            {% if is_in_watchlist %}
+                <form style="margin-top: 5px; margin-bottom: 20px;" action="{% url 'remove_watchlist' id=list_data.id %}">
+                    <button type="submit" class="btn btn-warning">Remove watchlist</button>
+                </form>
+            {% else %}
+                <form style="margin-top: 5px; margin-bottom: 20px;" action="{% url 'add_watchlist' id=list_data.id %}">
+                    <button type="submit" class="btn btn-primary">Add to watchlist</button>
+                </form>
+            {% endif %}
+            
+        {% endif %}
+          
+       
+
+
+        <section>
+          <div class="container">
+              <div class="row">
+                    <div class="col-sm-5 col-md-6 col-12 pb-4">
+                        <h1>Comments</h1>
+                        <hr>
+                        {% for comment in allcomments %}
+                            {% if 'fuck' not in comment.message %}
+                                  <div class="comment">
+                                      <img src="https://i.imgur.com/yTFUilP.jpg" alt="" class="rounded-circle" width="40" height="40">
+                                      <h4>{{comment.author}}</h4>
+                                      <span>- 20 October, 2023</span>
+                                      <br>
+                                      <p style="">{{comment.message}}</p>
+                                      <hr>
+                                  </div>
+                            {% endif %}
+                        
+                        {% endfor %}
+                    </div>                  
+                  {% if user.is_authenticated %}
+                       <div class="col-lg-4 col-md-5 col-sm-4 offset-md-1 offset-sm-1 col-12 mt-4">
+                          <form id="algin-form" action="{% url 'comment' id=list_data.id %}" method="POST">
+                              {% csrf_token %}
+                              <div class="form-group">
+                                  <h4>Leave a comment</h4>
+                                  <label for="message">Message</label>
+                                  <textarea name="newcomment" id=""msg cols="30" rows="5" class="form-control" style="background-color: rgb(4, 7, 10); color:rgb(246, 241, 241)"></textarea>
+                              </div>
+                              <div class="form-group">
+                                  <input type="submit" class="btn" value="Post Comment">
+                              </div>
+                          </form>
+                        </div>
+                  {% endif %}
+              </div>
+          </div>
+      </section>
+      
+
+    
+{% endblock %}

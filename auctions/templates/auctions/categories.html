@@ -1,0 +1,19 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    <h2>Categories</h2>
+    <form action="selected_category" method="post">
+        {% csrf_token %}
+        <div class="  "  style="width: 25rem;">
+            <label for="sel1">Select Category:</label>
+            <select name='selected_category' class="form-control" id="sel1">
+                {% for item in category %}
+                    <option>{{item}}</option>
+                {% endfor %}
+            </select>
+          </div>
+          <br>
+        <button type="submit" class="btn btn-primary">select</button>
+    </form>
+   
+{% endblock %}

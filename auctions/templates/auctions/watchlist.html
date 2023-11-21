@@ -1,0 +1,19 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    <h2>watched list</h2>
+
+    <br>
+    <div class="d-flex align-content-center justify-content-center flex-wrap">
+        {% for item in active_listing %}
+            <div class="card mx-3 my-3 col-lg-3 col-md-6 col-sm-12" style="width: 18rem;">
+                <img src="{{item.imageurl}}" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title">{{item.title}}</h5>
+                    <p class="card-text">{{item.description}}</p>
+                    <a href="{% url 'listing_page' id=item.id %}" class="btn btn-primary ml-5" >See Details</a>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}
